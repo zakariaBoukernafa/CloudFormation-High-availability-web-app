@@ -1,0 +1,50 @@
+Parameters:
+  S3ReadOnlyPolicyName:
+    Description: Please enter the IP range (CIDR notation) for this VPC
+    Type: String
+    Default: S3ReadOnlyEC2Acess
+
+Resources:
+  S3ReadOnlyEC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: S3ReadOnly
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+
+  RolePolicies:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: !Ref S3ReadOnlyPolicyName
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - s3:Get*
+              - s3:List*
+            Resource:
+              - arn:aws:s3:::examplebucket-utopia
+              - arn:aws:s3:::examplebucket-utopia/*
+      Roles:
+        - !Ref S3ReadOnlyEC2Role
+
+  ProfileWithRoles:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref S3ReadOnlyEC2Role
+
+Outputs:
+  ProfileWithRoles:
+    Description: Created profile for S3 read-only Access
+    Value: !Ref ProfileWithRoles
+    Export:
+      Name: OutputProfileWithRoles

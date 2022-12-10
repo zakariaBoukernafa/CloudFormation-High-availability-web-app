@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "EC2InstanceType",
+    "ParameterValue": "t2.medium"
+  },
+  {
+    "ParameterKey": "AMI",
+    "ParameterValue": "ami-0e8ad072b97e68af9"
+  }
+]
