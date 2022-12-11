@@ -37,6 +37,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref EnvironmentName
+
   PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -80,6 +81,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
+
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -136,6 +138,13 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet2
+
+  PublicInternetRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref InternetGateway
+      DestinationCidrBlock: 0.0.0.0/0
 
   PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
